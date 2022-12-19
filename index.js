@@ -1,40 +1,39 @@
-const MongoClient = require('mongodb').MongoClient;
+const {MongoClient} = require('mongodb');
 const assert = require('assert');
-const { connect } = require('http2');
 
-const url = 'mongodb://localhost:27017/';
-const dbname = conFusion
+const uri = 'mongodb://127.0.0.1:27017/';
+const dbname = 'conFusion';
 
-MongoClient.connect(url, (err, client) => {
-    
-    assert.equal(err, null);
 
-    console.log('Connected correctly to Server');
 
-    const db = client.db(dbname);
-    const collection = db.collection('dishes');
+async function main(){
+    /**
+     * Connection URI. Update <username>, <password>, and <your-cluster-url> to reflect your cluster.
+     * See https://docs.mongodb.com/ecosystem/drivers/node/ for more details
+     */
+ 
 
-    collection.insertOne({"name":"Uthappizza", "description":"test"}, (err, res) => {
+    const client = new MongoClient(uri, { useNewUrlParser : true, useUnifiedTopology : true });
+ 
+    try {
+        // Connect to the MongoDB cluster
+        await client.connect();
+ 
+        // Make the appropriate DB calls
+        await  listDatabases(client);
+ 
+    } catch (e) {
+        console.error(e);
+    } finally {
+        await client.close();
+    }
+}
 
-        assert.equal(err, null);
+async function listDatabases(client){
+    databasesList = await client.db().admin().listDatabases();
+ 
+    console.log("Databases:");
+    databasesList.databases.forEach(db => console.log(` - ${db.name}`));
+}
 
-        console.log('After Insert:\n');
-        console.log(result.ops);
-
-        collection.find({}).toArray((err, docs) => {
-           assert.equal(err, null);
-           
-           console.log('Found:\n');
-           console.log(docs)
-
-           db.collection.remove('dishes', (err, res) => {
-                assert.equal(err, null);
-
-                client.close();
-           });
-        });
-
-    });
-     
-
-})
+main().catch(console.error);
