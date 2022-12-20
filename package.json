@@ -19,7 +19,7 @@
   "homepage": "https://github.com/etterpaklokskapma1729/mongoDB-project#readme",
   "dependencies": {
     "assert": "^2.0.0",
-    "mongodb": "^4.12.1",
+    "mongodb": "^4.13.0",
     "mongodb-legacy": "^4.0.0"
   }
 }
